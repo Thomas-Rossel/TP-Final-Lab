@@ -88,59 +88,83 @@ hash.add(the_walking_dead)
 
 hash.show()
 
-queue = []
+#-------------------------------------------------------------------------------------------------------------------------
 
-products = hash.products()
-customers = ['Adrian', 'Santiago', 'Facundo', 'Luciano', 'Gustavo']
+import random
 
-#funcion para simular una orden aleatoria
-def order():
-    product = random.choice(products)
-    customer = random.choice(customers)
-    while product.stock == 'no':
-        print(f'lo lamento señor {customer} pero {product} no esta a la venta ahora mismo')
-        product = random.choice(products)
-    order = (product, customer)
-    return order
-   
+class Queue:
 
+    def __init__(self):
+        self.queue = []
+        self.products = hash.products()
+        self.customers = ['Adrian', 'Santiago', 'Facundo', 'Luciano', 'Gustavo']
 
-def enqueue():
-    order_ = order()
-    queue.append(order_)
-    print(f'Se añadio el pedido de "{order_[0]}", perteneciente a {order_[1]}, a la lista de espera')
+    def order(self):
+        product = random.choice(self.products)
+        customer = random.choice(self.customers)
+        while product.stock == 'no':
+            print(f'lo lamento señor {customer} pero {product} no esta a la venta ahora mismo')
+            product = random.choice(self.products)
+        order = (product, customer)
+        return order
 
-def dequeue():
-    if bool(queue):
-        element = queue.pop(0)
-        print(f'{element[1]} ya fue atendido y recibio su libro "{element[0]}"')
-    else:
-        print('la lista ya esta vacia')
+    def enqueue(self):
+        order_ = self.order()
+        self.queue.append(order_)
+        print(f'Se añadio el pedido de "{order_[0]}", perteneciente a {order_[1]}, a la lista de espera')
 
-def peek():
-    frontElement = queue[0]
-    print("El proximo en ser atendido sera:", frontElement[1])
+    def dequeue(self):
+        if bool(self.queue):
+            element = self.queue.pop(0)
+            print(f'{element[1]} ya fue atendido y recibio su libro "{element[0]}"')
+        else:
+            print('la lista ya esta vacia')
 
+    def peek(self):
+        if not bool(self.queue):
+            self.isempty()
+        else:
+            frontElement = self.queue[0]
+            print("El proximo en ser atendido sera:", frontElement[1])
 
-def isempty():
-    if not bool(queue):
-        print('No queda nadie por ser atendido')
+    def isempty(self):
+        if not bool(self.queue):
+            print('No queda nadie por ser atendido')
 
-def size():
-    print("El largo de la fila es de: ", len(queue))
+    def size(self):
+        print("El largo de la fila es de: ", len(self.queue))
 
-enqueue()
-enqueue()
-enqueue()
-enqueue()
-dequeue()
-peek()
-dequeue()
-size()
-isempty()
-dequeue()
-dequeue()
-dequeue()
-dequeue()
-dequeue()
-size()
+queue = Queue()
+
+queue.enqueue()
+queue.enqueue()
+queue.enqueue()
+queue.dequeue()
+queue.peek()
+queue.isempty()
+queue.size()
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+class Stack:
+    def __init__(self):
+        self.stack = []
+    
+    def push(self, element):
+        self.stack.append(element)
+    
+    def pop(self):
+        if self.isEmpty():
+            return "Stack is empty"
+        return self.stack.pop()
+    
+    def peek(self):
+        if self.isEmpty():
+            return "Stack is empty"
+        return self.stack[-1]
+    
+    def isEmpty(self):
+        return len(self.stack) == 0
+    
+    def size(self):
+        return len(self.stack)
