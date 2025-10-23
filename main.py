@@ -99,19 +99,19 @@ class Queue:
         self.products = hash.products()
         self.customers = ['Adrian', 'Santiago', 'Facundo', 'Luciano', 'Gustavo']
 
-    def order(self):
+    def order(self, value = 'no'):
         product = random.choice(self.products)
         customer = random.choice(self.customers)
-        while product.stock == 'no':
+        while product.stock == 'no' and value == 'no':
             print(f'lo lamento señor {customer} pero {product} no esta a la venta ahora mismo')
             product = random.choice(self.products)
         order = (product, customer)
-        return order
+        return order, product
 
     def enqueue(self):
         order_ = self.order()
-        self.queue.append(order_)
-        print(f'Se añadio el pedido de "{order_[0]}", perteneciente a {order_[1]}, a la lista de espera')
+        self.queue.append(order_[0])
+        print(f'Se añadio el pedido de "{order_[0][0]}", perteneciente a {order_[0][1]}, a la lista de espera')
 
     def dequeue(self):
         if bool(self.queue):
@@ -147,16 +147,27 @@ queue.size()
 #-------------------------------------------------------------------------------------------------------------------------
 
 class Stack:
+    
     def __init__(self):
         self.stack = []
     
-    def push(self, element):
-        self.stack.append(element)
+    def push(self):
+        order = queue.order('si')
+        product = order[1]
+        length = len(self.stack)
+        if length >= 5:
+            print(f'se ha añadido {product} correctamente al historial')
+            self.delete()
+            self.stack.append(product)
+        else:
+            self.stack.append(product)
+            print(f'se ha añadido {product} correctamente al historial')
     
-    def pop(self):
+    def delete(self):
         if self.isEmpty():
             return "Stack is empty"
-        return self.stack.pop()
+        product = self.stack.pop()
+        print(f"se ha eliminado {product} del historial")
     
     def peek(self):
         if self.isEmpty():
@@ -168,3 +179,13 @@ class Stack:
     
     def size(self):
         return len(self.stack)
+    
+stack = Stack()
+
+stack.push()
+stack.push()
+stack.push()
+stack.push()
+stack.push()
+stack.push()
+stack.push()
