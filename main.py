@@ -189,3 +189,98 @@ stack.push()
 stack.push()
 stack.push()
 stack.push()
+
+#-------------------------------------------------------------------------------------------------------------------------
+
+class CategoryNode:
+    def __init__(self, name):
+        self.name = name
+        self.subcategories = []
+        self.products = []  # lista de objetos Book
+
+    def add_subcategory(self, subcategory):
+        self.subcategories.append(subcategory)
+
+    def add_product(self, product):
+        self.products.append(product)
+
+    # buscar una categoría dentro del árbol (por nombre)
+    def find_category(self, name):
+        if self.name == name:
+            return self
+        for sub in self.subcategories:
+            found = sub.find_category(name)
+            if found:
+                return found
+        return None
+
+    # mostrar todas las categorías y subcategorías
+    def show_tree(self, level=0):
+        print("  " * level + f"- {self.name}")
+        for product in self.products:
+            print("  " * (level + 1) + f"* Producto: {product.name}")
+        for sub in self.subcategories:
+            sub.show_tree(level + 1)
+
+    # mostrar todos los productos bajo una categoría (incluye subcategorías)
+    def show_products_in_category(self, category_name):
+        category = self.find_category(category_name)
+        if not category:
+            print(f"No se encontró la categoría '{category_name}'")
+            return
+
+        print(f"Productos bajo la categoría '{category_name}':")
+        products = category.collect_all_products()
+        for product in products:
+            print(f"  - {product.name}")
+
+    # recolectar todos los productos de una categoría y sus subcategorías
+    def collect_all_products(self):
+        collected = list(self.products)
+        for sub in self.subcategories:
+            collected.extend(sub.collect_all_products())
+        return collected
+
+# crear el árbol principal
+root = CategoryNode("Cómics")
+
+# crear subcategorías principales
+dc = CategoryNode("DC Comics")
+marvel = CategoryNode("Marvel")
+independientes = CategoryNode("Independientes")
+
+# agregar subcategorías al árbol
+root.add_subcategory(dc)
+root.add_subcategory(marvel)
+root.add_subcategory(independientes)
+
+# subcategorías dentro de DC Comics
+batman = CategoryNode("Batman")
+superman = CategoryNode("Superman")
+dc.add_subcategory(batman)
+dc.add_subcategory(superman)
+
+# subcategorías dentro de Marvel
+xmen = CategoryNode("X-Men")
+avengers = CategoryNode("Avengers")
+marvel.add_subcategory(xmen)
+marvel.add_subcategory(avengers)
+
+# ahora agregamos los libros en las categorías correspondientes
+batman.add_product(watchmen)
+xmen.add_product(x_men)
+independientes.add_product(the_sandman)
+independientes.add_product(eternauta)
+independientes.add_product(the_walking_dead)
+
+# mostrar toda la jerarquía
+print("\n--- Árbol de categorías y productos ---")
+root.show_tree()
+
+# mostrar todos los productos bajo DC Comics
+print("\n--- Productos bajo 'DC Comics' ---")
+root.show_products_in_category("DC Comics")
+
+# mostrar todos los productos bajo Independientes
+print("\n--- Productos bajo 'Independientes' ---")
+root.show_products_in_category("Independientes")
